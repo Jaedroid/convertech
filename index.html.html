@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="theme-color" content="#0c2461">
+    <title>ConverTech - Chemistry & Metric Conversion</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Home Screen -->
+    <div class="home-screen" id="home-screen">
+        <h1 class="game-title">ConverTech</h1>
+        <div class="game-subtitle">Chemistry & Metric Conversion</div>
+        <p class="game-description">
+            Build chemical compounds and solve metric conversions against the clock!
+            Answer quiz questions when you lose a life to continue playing.
+        </p>
+        
+        <div class="mode-selection">
+            <div class="mode-card" onclick="startGame('chemistry')">
+                <div class="mode-icon">⚗️</div>
+                <h3 class="mode-title">Chemistry Mode</h3>
+                <p class="mode-desc">Build chemical formulas like H₂O, CO₂, and more complex molecules before time runs out!</p>
+                <button class="play-btn">
+                    <i class="fas fa-flask"></i> Start Chemistry
+                </button>
+            </div>
+            
+            <div class="mode-card" onclick="startGame('metric')">
+                <div class="mode-icon">📏</div>
+                <h3 class="mode-title">Metric Mode</h3>
+                <p class="mode-desc">Solve metric conversions like meters to centimeters, kilograms to grams, and more!</p>
+                <button class="play-btn">
+                    <i class="fas fa-ruler"></i> Start Metric
+                </button>
+            </div>
+        </div>
+        
+        <div class="game-footer">
+            <p>Educational Science Puzzle Game</p>
+				<p> By Group 2 </p>
+        </div>
+    </div>
+    
+    <!-- Game Container -->
+    <div class="container game-container" id="game-container">
+        <div class="game-header">
+            <button class="back-btn" onclick="goHome()">
+                <i class="fas fa-arrow-left"></i> Menu
+            </button>
+            <div class="mode-indicator" id="mode-indicator">
+                <i class="fas fa-flask"></i> <span id="mode-text">Chemistry Mode</span>
+            </div>
+        </div>
+        
+        <!-- Stats Bar -->
+        <div class="stats-bar">
+            <div class="stat-box">
+                <div class="stat-value" id="score">0</div>
+                <div class="stat-label">SCORE</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-value" id="level">1</div>
+                <div class="stat-label">LEVEL</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-value" id="lives-count">3</div>
+                <div class="stat-label">LIVES</div>
+                <div class="lives-container" id="lives-display">
+                    <div class="life"><i class="fas fa-heart"></i></div>
+                    <div class="life"><i class="fas fa-heart"></i></div>
+                    <div class="life"><i class="fas fa-heart"></i></div>
+                </div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-value" id="timer-display">45</div>
+                <div class="stat-label">TIME LEFT</div>
+                <div class="timer-container">
+                    <div class="timer-bar">
+                        <div class="timer-progress" id="timer-progress"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Question Panel -->
+        <div class="question-panel">
+            <div class="question-title">
+                <i class="fas fa-question-circle"></i> Question
+            </div>
+            <div class="question-text" id="question-text">
+                What is the chemical formula for Water?
+            </div>
+            <div class="time-warning" id="time-warning">
+                ⏰ Time remaining: <span id="time-remaining">45</span> seconds
+            </div>
+        </div>
+        
+        <!-- Selected Answer Display -->
+        <div class="selected-answer" id="selected-answer">
+            <div class="placeholder-text">Select tiles to build your answer...</div>
+        </div>
+        
+        <!-- Game Grid -->
+        <div class="grid-container" id="game-grid">
+            <!-- Tiles will be generated here -->
+        </div>
+        
+        <!-- Controls -->
+        <div class="controls">
+            <button class="control-btn hint" onclick="buyHint()" id="hint-btn">
+                <i class="fas fa-lightbulb"></i> Hint (-50)
+            </button>
+            <button class="control-btn clear" onclick="clearSelection()">
+                <i class="fas fa-eraser"></i> Clear
+            </button>
+            <button class="control-btn submit" onclick="submitAnswer()">
+                <i class="fas fa-paper-plane"></i> Submit
+            </button>
+        </div>
+        
+        <!-- Feedback Panel -->
+        <div class="feedback-panel" id="feedback-panel">
+            <div class="feedback-title" id="feedback-title">Result</div>
+            <div class="feedback-content" id="feedback-content"></div>
+        </div>
+        
+        <!-- Progress -->
+        <div class="progress-container">
+            <div class="progress-header">
+                <span>Progress</span>
+                <span id="progress-text">Question 1 of 8</span>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progress-fill"></div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Quiz Modal (Appears when losing a life) -->
+    <div class="quiz-modal" id="quiz-modal">
+        <div class="quiz-content">
+            <h2 class="quiz-title">Quiz Challenge!</h2>
+            <div class="quiz-topic" id="quiz-topic">Chemistry Quiz</div>
+            <div class="quiz-question" id="quiz-question">
+                What is the chemical symbol for Gold?
+            </div>
+            <div class="quiz-options" id="quiz-options">
+                <!-- Options will be generated here -->
+            </div>
+            <button class="control-btn submit" id="submit-quiz">
+                <i class="fas fa-paper-plane"></i> Submit Answer
+            </button>
+            <p class="quiz-hint">
+                Answer correctly to continue playing!
+            </p>
+        </div>
+    </div>
+    
+    <!-- Game Over -->
+    <div class="game-over" id="game-over">
+        <div class="game-over-content">
+            <h2 class="game-over-title">Game Over!</h2>
+            <div class="final-score-label">Final Score</div>
+            <div class="final-score" id="final-score">0</div>
+            <div class="final-stats">
+                <div class="final-stat">Correct Answers: <span id="final-correct">0</span></div>
+                <div class="final-stat">Level Reached: <span id="final-level">1</span></div>
+                <div class="final-stat">Time Played: <span id="final-time">0s</span></div>
+            </div>
+			  <div class="jana">
+            <button class="control-btn submit" onclick="restartGame()">
+                <i class="fas fa-redo"></i> Play Again
+            </button>
+			   </div>
+            <button class="control-btn home" onclick="goHome()">
+                <i class="fas fa-home"></i> Back to Menu
+            </button>
+        </div>
+    </div>
+    
+    <script src="game.js"></script>
+</body>
+</html>
